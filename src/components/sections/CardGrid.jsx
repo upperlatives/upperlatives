@@ -1,0 +1,80 @@
+import RichText from '../ui/RichText'
+import SmartLink from '../ui/SmartLink'
+import TiltCard from '../ui/TiltCard'
+import Media from '../ui/Media'
+import Reveal from '../ui/Reveal'
+import { ArrowLink } from '../ui/Button'
+import { arrowLinks, cards, heading, normalizePath, text } from '../../lib/wp'
+import { usePageIndex } from '../../hooks/useWp'
+
+function Arrow() {
+  return (
+    <span className="grid size-9 shrink-0 place-items-center rounded-full bg-white/20 backdrop-blur-md transition-transform duration-500 ease-out-expo group-hover:rotate-45">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+        <path d="M3.5 10.5 10.5 3.5M5 3.5h5.5V9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="square" />
+      </svg>
+    </span>
+  )
+}
+
+function Card({ card, index, wide }) {
+  const { data: pages } = usePageIndex()
+  // A card linking to another page borrows that page's featured image.
+  const linked = card.link?.internal ? pages?.get(normalizePath(card.link.href)) : null
+  const image = card.image || linked?.image
+
+  const body = (
+    <div
+      className={`group relative isolate flex h-full flex-col justify-between overflow-hidden rounded-card p-6 text-paper md:p-8 ${wide ? 'aspect-[4/3] md:aspect-[21/9]' : 'aspect-[4/5] sm:aspect-square'}`}
+    >
+      <Media image={image} index={index} className="-z-10 transition-transform duration-1000 ease-out-expo group-hover:scale-105" />
+      <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-b from-black/25 via-transparent to-black/45" />
+      <div className="flex items-start justify-between gap-4">
+        <h3 className="text-2xl font-medium tracking-[-0.03em] md:text-[26px]">{card.title}</h3>
+        {card.link && <Arrow />}
+      </div>
+      {/* no nested links inside a linked card */}
+      <RichText html={card.link ? card.html.replace(/<\/?a\b[^>]*>/g, '') : card.html} className="max-w-[40ch] text-lg leading-snug tracking-[-0.01em] text-paper/90" />
+    </div>
+  )
+
+  return (
+    <TiltCard className={wide ? 'sm:col-span-2' : ''}>
+      {card.link ? (
+        <SmartLink to={card.link.href} internal={card.link.internal} aria-label={card.title} className="block h-full">
+          {body}
+        </SmartLink>
+      ) : (
+        body
+      )}
+    </TiltCard>
+  )
+}
+
+/** Two-column image cards with the scroll tilt (reference portfolio grid). */
+export default function CardGrid({ el }) {
+  const h2 = heading(el)
+  const items = cards(el)
+  const links = arrowLinks(el)
+  const odd = items.length % 2 === 1
+
+  return (
+    <section className="container-x pt-20 md:pt-28">
+      {h2 && (
+        <Reveal className="mb-6 flex items-end justify-between gap-6 md:mb-8">
+          <h2 className="label">{text(h2)}</h2>
+          {links.map((l) => (
+            <ArrowLink key={l.href} to={l.href} internal={l.internal}>
+              {l.label}
+            </ArrowLink>
+          ))}
+        </Reveal>
+      )}
+      <div className="grid gap-2.5 sm:grid-cols-2">
+        {items.map((card, i) => (
+          <Card key={card.title + i} card={card} index={i} wide={odd && i === items.length - 1} />
+        ))}
+      </div>
+    </section>
+  )
+}

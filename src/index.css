@@ -1,0 +1,101 @@
+/* Self-hosted fonts (no Google Fonts request — GDPR friendly).
+   Inter with the optical-size axis gives "Inter Display" at large sizes. */
+@import '@fontsource-variable/inter/opsz.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/* Design tokens taken from the reference (paul-michel.framer.website). */
+@theme {
+  --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-ink: #111111;       /* text, dark panels */
+  --color-ink-2: #2a2a2a;     /* raised surface on dark */
+  --color-ink-3: #454545;
+  --color-muted: #888888;     /* secondary text, labels */
+  --color-soft: #aaaaaa;
+  --color-line: #d8d8d8;      /* hairlines, text on dark */
+  --color-paper: #ffffff;
+
+  --text-mono: 0.8125rem;     /* 13px mono labels */
+  --text-mono--line-height: 1.2;
+
+  --radius-card: 0.625rem;    /* 10px */
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-ribbon: ribbon 40s linear infinite;
+  --animate-stack: stack 18s linear infinite;
+
+  @keyframes ribbon {
+    to { transform: translateX(-50%); }
+  }
+  @keyframes stack {
+    to { transform: rotateY(360deg); }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-paper font-sans text-ink;
+    font-optical-sizing: auto;
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    @apply bg-ink text-paper;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ink;
+  }
+}
+
+/* Page gutter: 20px on phones, 72px on desktop (as in the reference). */
+@utility container-x {
+  @apply mx-auto w-full max-w-[1600px] px-5 md:px-10 lg:px-18;
+}
+
+/* Small uppercase mono label: "ABOUT ME", "SERVICES", nav links … */
+@utility label {
+  @apply font-mono text-mono font-normal uppercase tracking-[0.02em] text-muted;
+}
+
+/* Display headings: Inter Display, tight tracking. */
+@utility display {
+  font-variation-settings: 'opsz' 32;
+  @apply font-semibold leading-[0.9] tracking-[-0.06em];
+}
+
+@layer components {
+  /* Rich text coming from WordPress. <strong> is rendered as the dark
+     "highlight" colour on muted text, like the reference hero copy. */
+  .wp-highlight {
+    @apply text-muted;
+  }
+  .wp-highlight strong,
+  .wp-highlight b,
+  .wp-highlight a {
+    @apply font-normal text-ink;
+  }
+  .wp-highlight-dark strong,
+  .wp-highlight-dark b {
+    @apply font-normal text-paper;
+  }
+
+  .wp-text a {
+    @apply underline decoration-1 underline-offset-4 transition-colors hover:decoration-transparent;
+  }
+  .wp-text p + p {
+    @apply mt-[1em];
+  }
+}
