@@ -1,3 +1,4 @@
+import { useLenis } from 'lenis/react'
 import SmartLink from '../ui/SmartLink'
 import Wordmark from '../ui/Wordmark'
 import { useSiteInfo } from '../../hooks/useWp'
@@ -22,6 +23,7 @@ function Column({ title, items, className = '' }) {
 
 export default function Footer() {
   const { name } = useSiteInfo()
+  const lenis = useLenis()
   const { socials, contact, legal } = site.footer
   const menu = [{ label: 'Home', to: '/' }, ...site.nav]
 
@@ -45,7 +47,7 @@ export default function Footer() {
         </div>
         <button
           type="button"
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          onClick={() => (lenis ? lenis.scrollTo(0, { duration: 1.6 }) : window.scrollTo({ top: 0, behavior: 'smooth' }))}
           className="label hidden cursor-pointer justify-self-center transition-colors hover:text-ink md:block"
         >
           Back to top ↑

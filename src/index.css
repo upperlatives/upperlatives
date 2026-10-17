@@ -3,6 +3,7 @@
 @import '@fontsource-variable/inter/opsz.css';
 @import '@fontsource/ibm-plex-mono/400.css';
 @import '@fontsource/ibm-plex-mono/500.css';
+@import 'lenis/dist/lenis.css';
 
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';

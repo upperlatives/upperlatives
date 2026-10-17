@@ -1,7 +1,7 @@
 # Upperlatives — headless React front end
 
 React 19 + Vite + Tailwind CSS v4. All content comes from the WordPress REST API at
-`https://upper.test`. The design follows [paul-michel.framer.website](https://paul-michel.framer.website/).
+`https://wp.upperlatives.com` (a local copy runs at `https://upper.test`). The design follows [paul-michel.framer.website](https://paul-michel.framer.website/).
 
 ```bash
 npm install
@@ -14,8 +14,9 @@ npm run lint
 
 | File | What it holds |
 | --- | --- |
-| `.env.local` | `VITE_WP_URL` — WordPress install. In dev, `/wp-json` and `/wp-content` are proxied there. |
-| `.env.production` | Same, plus `VITE_WP_DIRECT=true` so the built site calls WordPress directly. Set the live URL here. |
+| `.env` | Defaults: `VITE_WP_URL=https://wp.upperlatives.com`. In dev, `/wp-json` and `/wp-content` are proxied there. |
+| `.env.local` | Your machine's overrides (not committed), e.g. switch to the local copy `https://upper.test`. |
+| `.env.production` | Used by `npm run build`: same URL plus `VITE_WP_DIRECT=true`, so the built site calls WordPress directly. |
 | `src/site.config.js` | Navigation, footer links, contact details, slug aliases, hero variants, ribbon words. |
 | `src/index.css` | Design tokens (colours, fonts, radius) in `@theme`. |
 

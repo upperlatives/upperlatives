@@ -14,14 +14,14 @@ const https = fs.existsSync(`${certDir}/localhost+2.pem`)
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const wpUrl = env.VITE_WP_URL || 'https://upper.test'
+  const wpUrl = env.VITE_WP_URL || 'https://wp.upperlatives.com'
 
   return {
     plugins: [react(), tailwindcss()],
     server: {
       https,
       // In dev the app calls /wp-json and /wp-content on its own origin; Vite forwards
-      // them to WordPress, so the self-signed upper.test certificate never matters.
+      // them to WordPress (also avoids certificate trouble with a local copy like upper.test).
       proxy: {
         '/wp-json': { target: wpUrl, changeOrigin: true, secure: false },
         '/wp-content': { target: wpUrl, changeOrigin: true, secure: false },

@@ -1,12 +1,12 @@
 import DOMPurify from 'dompurify'
 import site from '../site.config'
 
-export const WP_URL = (import.meta.env.VITE_WP_URL || 'https://upper.test').replace(/\/$/, '')
+export const WP_URL = (import.meta.env.VITE_WP_URL || 'https://wp.upperlatives.com').replace(/\/$/, '')
 const DIRECT = import.meta.env.VITE_WP_DIRECT === 'true'
 const API = `${DIRECT ? WP_URL : ''}/wp-json`
 const WP_HOST = new URL(WP_URL).host
 
-const PAGE_FIELDS = 'id,slug,link,parent,menu_order,title,excerpt,featured_media,_links,_embedded'
+const PAGE_FIELDS = 'id,slug,link,parent,menu_order,title,excerpt,featured_media,featured_video,_links,_embedded'
 
 async function wpFetch(path, params = {}) {
   const url = new URL(`${API}${path}`, window.location.origin)
@@ -82,6 +82,12 @@ function featuredImage(page) {
   }
 }
 
+// From the "Featured video" panel (mu-plugin upl-featured-video).
+function featuredVideo(page) {
+  const v = page.featured_video
+  return v?.src ? { src: mediaUrl(v.src), type: v.mime, width: v.width, height: v.height } : null
+}
+
 function decode(html = '') {
   const el = document.createElement('textarea')
   el.innerHTML = html.replace(/<[^>]*>/g, '')
@@ -99,6 +105,7 @@ function summarise(page) {
     title: decode(page.title?.rendered),
     excerpt: decode(page.excerpt?.rendered),
     image: featuredImage(page),
+    video: featuredVideo(page),
     aliased: page.slug in site.slugAliases,
   }
 }
@@ -216,11 +223,13 @@ export function cards(el) {
         return a && { href: a.getAttribute('href'), label: text(a), internal: a.hasAttribute('data-internal') }
       })()
     const img = card.querySelector('img')
+    const video = card.querySelector('video')
     return {
       title: text(title),
-      html: restHtml(card, [title, img?.closest('figure') || img]),
+      html: restHtml(card, [title, img?.closest('figure') || img, video?.closest('figure') || video]),
       link,
       image: img ? { src: img.getAttribute('src'), alt: img.getAttribute('alt') || '' } : null,
+      video: video?.getAttribute('src') ? { src: mediaUrl(video.getAttribute('src')) } : null,
     }
   })
 }

@@ -8,12 +8,12 @@ import { ButtonRow } from '../ui/Button'
 import { buttons, heading, restHtml, text } from '../../lib/wp'
 import { usePageIndex, useSiteInfo } from '../../hooks/useWp'
 
-function FeaturedImage({ image }) {
-  if (!image) return null
+function FeaturedMedia({ image, video }) {
+  if (!image && !video) return null
   return (
     <TiltCard className="container-x mt-12 md:mt-16">
       <div className="relative aspect-[4/3] overflow-hidden rounded-card md:aspect-[16/9]">
-        <Media image={image} sizes="100vw" />
+        <Media video={video} image={image} sizes="100vw" />
       </div>
     </TiltCard>
   )
@@ -43,7 +43,7 @@ function WordmarkHero({ title, intro, actions }) {
 }
 
 /** Big left-aligned title ("Selected Work"), optional 3D stack on the right. */
-function TitleHero({ title, intro, actions, image, stack }) {
+function TitleHero({ title, intro, actions, image, video, stack }) {
   const { data: index } = usePageIndex()
   const images = stack ? [...(index?.values() || [])].map((p) => p.image).filter(Boolean) : []
 
@@ -67,13 +67,13 @@ function TitleHero({ title, intro, actions, image, stack }) {
           </Reveal>
         )}
       </section>
-      <FeaturedImage image={image} />
+      <FeaturedMedia image={image} video={video} />
     </>
   )
 }
 
 /** Centred title like the reference project pages ("Syndicate"). */
-function CenteredHero({ title, intro, actions, image }) {
+function CenteredHero({ title, intro, actions, image, video }) {
   return (
     <>
       <section className="container-x flex flex-col items-center pb-6 text-center md:pb-10">
@@ -87,7 +87,7 @@ function CenteredHero({ title, intro, actions, image }) {
           <ButtonRow items={actions} className="mt-8 justify-center" />
         </Reveal>
       </section>
-      <FeaturedImage image={image} />
+      <FeaturedMedia image={image} video={video} />
     </>
   )
 }
@@ -99,6 +99,7 @@ export default function Hero({ el, page, variant }) {
     intro: restHtml(el, [h1]),
     actions: buttons(el),
     image: page.image,
+    video: page.video,
   }
   if (variant === 'wordmark') return <WordmarkHero {...props} />
   if (variant === 'centered') return <CenteredHero {...props} />

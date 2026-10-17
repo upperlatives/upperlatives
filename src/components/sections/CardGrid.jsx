@@ -19,15 +19,18 @@ function Arrow() {
 
 function Card({ card, index, wide }) {
   const { data: pages } = usePageIndex()
-  // A card linking to another page borrows that page's featured image.
+  // A card linking to another page borrows that page's featured video/image;
+  // media placed inside the card itself wins.
   const linked = card.link?.internal ? pages?.get(normalizePath(card.link.href)) : null
+  const ownMedia = card.image || card.video
+  const video = card.video || (ownMedia ? null : linked?.video)
   const image = card.image || linked?.image
 
   const body = (
     <div
       className={`group relative isolate flex h-full flex-col justify-between overflow-hidden rounded-card p-6 text-paper md:p-8 ${wide ? 'aspect-[4/3] md:aspect-[21/9]' : 'aspect-[4/5] sm:aspect-square'}`}
     >
-      <Media image={image} index={index} className="-z-10 transition-transform duration-1000 ease-out-expo group-hover:scale-105" />
+      <Media video={video} image={image} index={index} className="-z-10 transition-transform duration-1000 ease-out-expo group-hover:scale-105" />
       <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-b from-black/25 via-transparent to-black/45" />
       <div className="flex items-start justify-between gap-4">
         <h3 className="text-2xl font-medium tracking-[-0.03em] md:text-[26px]">{card.title}</h3>
