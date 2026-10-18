@@ -12,12 +12,34 @@ const https = fs.existsSync(`${certDir}/localhost+2.pem`)
     }
   : undefined
 
+/**
+ * VITE_NOINDEX=true keeps the site out of search engines: a robots meta tag
+ * in index.html plus an X-Robots-Tag header (via .htaccess) for every URL.
+ */
+function noindex(enabled) {
+  const directive = 'noindex, nofollow'
+  return {
+    name: 'upl-noindex',
+    transformIndexHtml(html) {
+      return enabled ? html.replace('</head>', `    <meta name="robots" content="${directive}" />\n  </head>`) : html
+    },
+    closeBundle() {
+      const file = 'dist/.htaccess'
+      if (!enabled || !fs.existsSync(file)) return
+      fs.appendFileSync(
+        file,
+        `\n# Added by the build because VITE_NOINDEX=true: keep every URL out of search engines.\n<IfModule mod_headers.c>\n  Header always set X-Robots-Tag "${directive}"\n</IfModule>\n`,
+      )
+    },
+  }
+}
+
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const wpUrl = env.VITE_WP_URL || 'https://wp.upperlatives.com'
 
   return {
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), noindex(env.VITE_NOINDEX === 'true')],
     server: {
       https,
       // In dev the app calls /wp-json and /wp-content on its own origin; Vite forwards

@@ -16,7 +16,7 @@ npm run lint
 | --- | --- |
 | `.env` | Defaults: `VITE_WP_URL=https://wp.upperlatives.com`. In dev, `/wp-json` and `/wp-content` are proxied there. |
 | `.env.local` | Your machine's overrides (not committed), e.g. switch to the local copy `https://upper.test`. |
-| `.env.production` | Used by `npm run build`: same URL plus `VITE_WP_DIRECT=true`, so the built site calls WordPress directly. |
+| `.env.production` | Used by `npm run build`: same URL plus `VITE_WP_DIRECT=true`, so the built site calls WordPress directly. `VITE_NOINDEX=true` keeps the site out of search engines (robots meta tag + `X-Robots-Tag` header); remove it to go public. |
 | `src/site.config.js` | Navigation, footer links, contact details, slug aliases, hero variants, ribbon words. |
 | `src/index.css` | Design tokens (colours, fonts, radius) in `@theme`. |
 
