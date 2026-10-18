@@ -1,0 +1,46 @@
+# Build the React site and upload it to the web server on every push to main.
+# Credentials live in GitHub → Settings → Secrets and variables → Actions:
+#   FTP_SERVER      e.g. w0123456.kasserver.com
+#   FTP_USERNAME    FTP user (best: one limited to the site's folder)
+#   FTP_PASSWORD
+#   FTP_SERVER_DIR  target folder on the server, ending in "/", e.g. /upperlatives.com/
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # "Run workflow" button in the Actions tab
+
+# never run two uploads at the same time
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      # uses .env + .env.production (content from https://wp.upperlatives.com)
+      - run: npm run build
+
+      # Uploads only files that changed since the last deploy (it keeps a small
+      # .ftp-deploy-sync-state.json on the server) and removes deleted ones.
+      - name: Upload dist/ via FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./dist/
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}

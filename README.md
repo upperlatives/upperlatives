@@ -46,6 +46,23 @@ Writing tips:
 - A paragraph that holds only a link (e.g. `See our full process →`) becomes a mono arrow link.
 - Buttons: the default style is solid, and the **Outline** style becomes the light pill.
 
+## Deployment
+
+Every push to `main` runs [.github/workflows/deploy.yml](.github/workflows/deploy.yml): install → lint →
+build → upload `dist/` to the web server over FTPS (only changed files; deleted files are removed).
+It can also be started by hand: GitHub → Actions → Deploy → Run workflow.
+
+One-time setup:
+
+1. **FTP account** (All-Inkl KAS → FTP → new FTP account), limited to the folder of the site's domain.
+2. **GitHub secrets** (repository → Settings → Secrets and variables → Actions → New repository secret):
+   `FTP_SERVER` (e.g. `w0123456.kasserver.com`), `FTP_USERNAME`, `FTP_PASSWORD`, and `FTP_SERVER_DIR`
+   (the target folder, ending in `/`, e.g. `/upperlatives.com/`).
+3. Push to `main` and watch the run in the Actions tab.
+
+`public/.htaccess` ships with every deploy: it serves `index.html` for all app routes (so links like
+`/services/seo/` work on reload) and sets cache headers.
+
 ## Before going live
 
 See also the SEO/GEO/UX checklist in [docs/seo-geo-ux-audit.md](docs/seo-geo-ux-audit.md).
@@ -54,7 +71,6 @@ See also the SEO/GEO/UX checklist in [docs/seo-geo-ux-audit.md](docs/seo-geo-ux-
   *Studio* / *Contact* pages, then remove the matching `slugAliases` in `src/site.config.js`.
 - Fill in the footer contact and social links in `src/site.config.js`. A German site also needs an
   Impressum page: add it to `footer.legal`.
-- The server must send every unknown path to `index.html` (SPA fallback).
 - Search engines and AI crawlers get an empty HTML shell until JavaScript runs. For SEO/GEO,
   add build-time prerendering, for example by fetching all pages in a build script and writing
   static HTML per route.
