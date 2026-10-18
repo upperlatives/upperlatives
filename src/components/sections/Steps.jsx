@@ -1,8 +1,9 @@
+import Heading from '../ui/Heading'
 import Panel from '../ui/Panel'
 import RichText from '../ui/RichText'
 import Reveal from '../ui/Reveal'
 import { ArrowLink } from '../ui/Button'
-import { arrowLinks, heading, restHtml, steps, text } from '../../lib/wp'
+import { arrowLinks, heading, headingTag, restHtml, steps, text } from '../../lib/wp'
 
 /** Numbered list as rows with hairlines — the reference "Experience" table. */
 export default function Steps({ el }) {
@@ -17,7 +18,7 @@ export default function Steps({ el }) {
     <section className="container-x">
       <Panel className="grid gap-8 md:grid-cols-12 md:gap-10">
         <div className="flex flex-col justify-between gap-8 md:col-span-4">
-          <h2 className="label md:sticky md:top-10">{text(h2)}</h2>
+          <Heading as={headingTag(h2)} className="label md:sticky md:top-10">{text(h2)}</Heading>
           <div className="hidden md:block">
             {links.map((l) => (
               <ArrowLink key={l.href} to={l.href} internal={l.internal} dark>

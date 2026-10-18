@@ -61,9 +61,20 @@ export function mediaUrl(src = '') {
 
 /* ---------- Data ---------- */
 
+/** Site name, tagline, logo (Site Editor / Customizer) and site icon (favicon). */
 export async function getSiteInfo() {
-  const { data } = await wpFetch('/', { _fields: 'name,description' })
-  return data
+  const { data } = await wpFetch('/', { _fields: 'name,description,site_logo,site_icon_url' })
+  let logo = null
+  if (data.site_logo) {
+    const { data: m } = await wpFetch(`/wp/v2/media/${data.site_logo}`, { _fields: 'source_url,alt_text,media_details' })
+    logo = {
+      src: mediaUrl(m.source_url),
+      alt: m.alt_text || '',
+      width: m.media_details?.width || null,
+      height: m.media_details?.height || null,
+    }
+  }
+  return { name: data.name, description: data.description, logo, icon: data.site_icon_url ? mediaUrl(data.site_icon_url) : null }
 }
 
 function featuredImage(page) {
@@ -186,7 +197,29 @@ export function parseSections(html) {
 export const text = (el) => el?.textContent.trim() || ''
 
 /** Direct-child heading of a section (h1/h2). */
-export const heading = (el, tag = 'h2') => el.querySelector(`:scope > ${tag}, :scope > * > ${tag}`)
+/**
+ * A section's title. Normally its h2; when editors use a paragraph instead
+ * (so the page keeps fewer h2s), a paragraph with the class "upl-title", or the
+ * section's first paragraph when it reads like a title: short, no link, no
+ * closing full stop, and followed by more content.
+ */
+export function heading(el, tag = 'h2') {
+  const found = el.querySelector(`:scope > ${tag}, :scope > * > ${tag}`)
+  if (found || tag !== 'h2') return found
+  const marked = el.querySelector(':scope > p.upl-title')
+  if (marked) return marked
+  const first = el.firstElementChild
+  const t = first?.tagName === 'P' ? text(first) : ''
+  const looksLikeTitle =
+    t && t.length <= 80 && !/[.:;,]$/.test(t) && !first.querySelector('a, img') && first.nextElementSibling
+  return looksLikeTitle ? first : null
+}
+
+/**
+ * The element a section title should render as: keep editors' choice of h2,
+ * otherwise a paragraph (also for built-in labels like "Overview").
+ */
+export const headingTag = (h) => (h?.tagName === 'H2' ? 'h2' : 'p')
 
 /** A paragraph that only holds one "… →" link renders as a mono arrow link. */
 export function arrowLink(p) {
@@ -213,6 +246,21 @@ export function restHtml(el, skip = []) {
 }
 
 export const arrowLinks = (el) => [...el.children].map(arrowLink).filter(Boolean)
+
+/**
+ * The paragraph(s) that introduce a section: those directly below its heading
+ * (`leading`, for sections whose content is cards, FAQs, quotes …) and any
+ * paragraph given the CSS class "upl-intro" in WordPress (works everywhere).
+ */
+export function introOf(el, h2, { leading = true } = {}) {
+  const nodes = [...el.querySelectorAll(':scope > .upl-intro')]
+  if (leading && h2) {
+    for (let n = h2.nextElementSibling; n?.tagName === 'P' && !arrowLink(n); n = n.nextElementSibling) {
+      if (!nodes.includes(n)) nodes.push(n)
+    }
+  }
+  return { html: nodes.map((n) => n.outerHTML).join(''), nodes }
+}
 
 export function cards(el) {
   return [...el.querySelectorAll('.upl-card')].map((card) => {

@@ -1,7 +1,8 @@
+import Heading from '../ui/Heading'
 import Panel from '../ui/Panel'
 import RichText from '../ui/RichText'
 import { ArrowLink } from '../ui/Button'
-import { arrowLinks, heading, restHtml, text } from '../../lib/wp'
+import { arrowLinks, heading, headingTag, restHtml, text } from '../../lib/wp'
 
 /** Dark "About me" / "Overview" panel: label left, large text right. */
 export default function Statement({ el, label = 'Overview' }) {
@@ -11,7 +12,7 @@ export default function Statement({ el, label = 'Overview' }) {
     <section className="container-x">
       <Panel className="grid gap-8 md:min-h-[420px] md:grid-cols-2 md:gap-10">
         <div className="flex flex-col justify-between gap-8">
-          <h2 className="label md:sticky md:top-10">{text(h2) || label}</h2>
+          <Heading as={headingTag(h2)} className="label md:sticky md:top-10">{text(h2) || label}</Heading>
           {links.map((l) => (
             <ArrowLink key={l.href} to={l.href} internal={l.internal} dark className="hidden md:inline-block">
               {l.label}

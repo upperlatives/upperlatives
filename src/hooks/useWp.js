@@ -13,7 +13,12 @@ export const pageQuery = (id) => ({
 
 export function useSiteInfo() {
   const { data } = useQuery({ queryKey: ['site'], queryFn: getSiteInfo, staleTime: Infinity })
-  return { name: data?.name || site.name, description: data?.description || '' }
+  return {
+    name: data?.name || site.name,
+    description: data?.description || '',
+    logo: data?.logo || null,
+    icon: data?.icon || null,
+  }
 }
 
 export function usePageIndex() {

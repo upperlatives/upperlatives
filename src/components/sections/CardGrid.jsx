@@ -3,7 +3,7 @@ import SmartLink from '../ui/SmartLink'
 import TiltCard from '../ui/TiltCard'
 import Media from '../ui/Media'
 import { ArrowLink } from '../ui/Button'
-import { arrowLinks, cards, heading, normalizePath, restHtml, text } from '../../lib/wp'
+import { arrowLinks, cards, heading, headingTag, normalizePath, restHtml, text } from '../../lib/wp'
 import { usePageIndex } from '../../hooks/useWp'
 import { SectionShell } from './Prose'
 import { cursorLabel } from '../../lib/cursorLabel'
@@ -73,22 +73,21 @@ export default function CardGrid({ el }) {
   const h2 = heading(el)
   const items = cards(el)
   const links = arrowLinks(el)
+  // every paragraph outside the cards introduces the section
   const intro = restHtml(el, [h2, el.querySelector(':scope > .upl-cards')])
 
   return (
     <SectionShell
       label={text(h2)}
+      labelAs={headingTag(h2)}
+      intro={intro}
       aside={
-        (intro || links.length > 0) && (
-          <>
-            <RichText html={intro} className="max-w-[34ch] text-lg leading-snug tracking-[-0.01em] text-muted" />
-            {links.map((l) => (
-              <ArrowLink key={l.href} to={l.href} internal={l.internal}>
-                {l.label}
-              </ArrowLink>
-            ))}
-          </>
-        )
+        links.length > 0 &&
+        links.map((l) => (
+          <ArrowLink key={l.href} to={l.href} internal={l.internal}>
+            {l.label}
+          </ArrowLink>
+        ))
       }
     >
       <CardList items={items} />

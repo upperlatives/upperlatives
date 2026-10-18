@@ -1,6 +1,6 @@
 import RichText from '../ui/RichText'
 import Reveal from '../ui/Reveal'
-import { faqs, heading, text } from '../../lib/wp'
+import { faqs, heading, headingTag, introOf, text } from '../../lib/wp'
 import { SectionShell } from './Prose'
 
 /** Accordion on native <details> — accessible and works without JS. */
@@ -20,7 +20,7 @@ export default function Faq({ el }) {
   }
 
   return (
-    <SectionShell label={text(h2)}>
+    <SectionShell label={text(h2)} labelAs={headingTag(h2)} intro={introOf(el, h2).html}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <div className="border-t border-line">
         {items.map((f, i) => (

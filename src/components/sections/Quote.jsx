@@ -1,12 +1,12 @@
 import Reveal from '../ui/Reveal'
-import { heading, text } from '../../lib/wp'
+import { heading, headingTag, introOf, text } from '../../lib/wp'
 import { SectionShell } from './Prose'
 
 export default function Quote({ el }) {
   const h2 = heading(el)
   const quotes = [...el.querySelectorAll('blockquote')]
   return (
-    <SectionShell label={text(h2)}>
+    <SectionShell label={text(h2)} labelAs={headingTag(h2)} intro={introOf(el, h2).html}>
       <div className="space-y-14">
         {quotes.map((q, i) => {
           const cite = q.querySelector('cite')

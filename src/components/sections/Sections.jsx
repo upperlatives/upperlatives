@@ -8,12 +8,24 @@ import Cta from './Cta'
 import Trust from './Trust'
 import Related from './Related'
 import Prose from './Prose'
+import { heading } from '../../lib/wp'
 
 /**
  * Picks a design for each WordPress section: first by its upl-* class, then by
  * what it contains. Anything unknown falls back to <Prose>, so new sections
  * added in WordPress always render.
  */
+/**
+ * Paragraphs other than the section title, its intro and a closing link line.
+ * A numbered list without such body text becomes the dark "steps" panel.
+ */
+function hasBodyText(el) {
+  const title = heading(el)
+  return [...el.querySelectorAll(':scope > p')].some(
+    (p) => p !== title && !p.classList.contains('upl-intro') && p !== el.lastElementChild,
+  )
+}
+
 function pick({ kind, el }) {
   const byKind = {
     hero: Hero,
@@ -28,7 +40,7 @@ function pick({ kind, el }) {
   if (el.querySelector('.upl-card')) return CardGrid
   if (el.querySelector('details')) return Faq
   if (el.querySelector(':scope > blockquote')) return Quote
-  if (el.querySelector(':scope > ol') && !el.querySelector(':scope > p:not(:last-child)')) return Steps
+  if (el.querySelector(':scope > ol') && !hasBodyText(el)) return Steps
   if (el.querySelector(':scope > h1')) return Hero
   return Prose
 }

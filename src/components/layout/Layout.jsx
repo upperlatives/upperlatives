@@ -5,6 +5,7 @@ import { useReducedMotion } from 'motion/react'
 import Header from './Header'
 import Footer from './Footer'
 import CustomCursor from '../ui/CustomCursor'
+import { useSiteInfo } from '../../hooks/useWp'
 
 // Inertia scrolling like the Framer reference. Lenis drives the native scroll
 // position, so scroll-linked animations (useScroll, whileInView) keep working.
@@ -23,6 +24,19 @@ function ScrollManager() {
   return null
 }
 
+/** Point the favicon at the WordPress site icon (index.html ships a copy as default). */
+function Favicon() {
+  const { icon } = useSiteInfo()
+  useEffect(() => {
+    if (!icon) return
+    const link = document.querySelector('link[rel="icon"]')
+    if (!link) return
+    link.href = icon
+    link.type = icon.endsWith('.svg') ? 'image/svg+xml' : ''
+  }, [icon])
+  return null
+}
+
 export default function Layout() {
   const reduce = useReducedMotion()
 
@@ -30,6 +44,7 @@ export default function Layout() {
     <>
       {!reduce && <ReactLenis root options={LENIS_OPTIONS} />}
       <ScrollManager />
+      <Favicon />
       <a href="#main" className="label sr-only z-50 bg-paper p-3 focus:not-sr-only focus:fixed focus:left-3 focus:top-3">
         Skip to content
       </a>

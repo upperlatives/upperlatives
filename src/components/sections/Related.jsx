@@ -1,14 +1,16 @@
 import SmartLink from '../ui/SmartLink'
 import Reveal from '../ui/Reveal'
-import { heading, text } from '../../lib/wp'
+import { heading, headingTag, introOf, text } from '../../lib/wp'
 import { SectionShell } from './Prose'
 
 /** "Related services" — inline links become large rows with arrows. */
 export default function Related({ el }) {
   const h2 = heading(el)
-  const links = [...el.querySelectorAll('a[href]')]
+  // the links paragraph is the content, so only a marked intro counts here
+  const intro = introOf(el, h2, { leading: false })
+  const links = [...el.querySelectorAll('a[href]')].filter((a) => !intro.nodes.some((n) => n.contains(a)))
   return (
-    <SectionShell label={text(h2)}>
+    <SectionShell label={text(h2)} labelAs={headingTag(h2)} intro={intro.html}>
       <ul className="border-t border-line">
         {links.map((a, i) => (
           <Reveal as="li" key={a.getAttribute('href')} delay={i * 0.05} className="border-b border-line">
