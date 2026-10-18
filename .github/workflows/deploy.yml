@@ -3,7 +3,8 @@
 #   FTP_SERVER      e.g. w0123456.kasserver.com
 #   FTP_USERNAME    FTP user (best: one limited to the site's folder)
 #   FTP_PASSWORD
-#   FTP_SERVER_DIR  target folder on the server, ending in "/", e.g. /upperlatives.com/
+#   FTP_SERVER_DIR  target folder on the server, ending in "/". For an FTP user that
+#                   is limited to the site folder (All-Inkl), use ./ (not /).
 name: Deploy
 
 on:
@@ -39,7 +40,7 @@ jobs:
             echo "::error::Missing repository secret(s):$missing — add them under Settings → Secrets and variables → Actions → Secrets (not Variables, not an Environment)."
             exit 1
           fi
-          case "$FTP_SERVER_DIR" in */) ;; *) echo "::error::FTP_SERVER_DIR must end with a slash, e.g. / or /upperlatives.com/"; exit 1 ;; esac
+          case "$FTP_SERVER_DIR" in */) ;; *) echo "::error::FTP_SERVER_DIR must end with a slash, e.g. ./ or /upperlatives.com/"; exit 1 ;; esac
           echo "All deploy secrets are set."
 
       - uses: actions/checkout@v5
@@ -65,3 +66,5 @@ jobs:
           protocol: ftps
           local-dir: ./dist/
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          # full FTP conversation in the log, so failures show the exact command
+          log-level: verbose

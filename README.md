@@ -57,7 +57,8 @@ One-time setup:
 1. **FTP account** (All-Inkl KAS → FTP → new FTP account), limited to the folder of the site's domain.
 2. **GitHub secrets** (repository → Settings → Secrets and variables → Actions → New repository secret):
    `FTP_SERVER` (e.g. `w0123456.kasserver.com`), `FTP_USERNAME`, `FTP_PASSWORD`, and `FTP_SERVER_DIR`
-   (the target folder, ending in `/`, e.g. `/upperlatives.com/`).
+   (the target folder, ending in `/`: `./` for an FTP user limited to the site folder, otherwise
+   e.g. `/upperlatives.com/`).
 3. Push to `main` and watch the run in the Actions tab.
 
 `public/.htaccess` ships with every deploy: it serves `index.html` for all app routes (so links like
