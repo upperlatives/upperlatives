@@ -17,7 +17,7 @@ export default function Steps({ el }) {
     <section className="container-x">
       <Panel className="grid gap-8 md:grid-cols-12 md:gap-10">
         <div className="flex flex-col justify-between gap-8 md:col-span-4">
-          <h2 className="label">{text(h2)}</h2>
+          <h2 className="label md:sticky md:top-10">{text(h2)}</h2>
           <div className="hidden md:block">
             {links.map((l) => (
               <ArrowLink key={l.href} to={l.href} internal={l.internal} dark>

@@ -1,4 +1,5 @@
 import SmartLink from './SmartLink'
+import BlurLetters from './BlurLetters'
 
 const styles = {
   solid: 'bg-ink text-paper hover:bg-ink-3',
@@ -7,7 +8,10 @@ const styles = {
   light: 'bg-paper text-ink hover:bg-line',
 }
 
-/** Pill button in the reference style ("DOWNLOAD MY CV", "VIEW ONLINE"). */
+/**
+ * Pill button in the reference style ("DOWNLOAD MY CV", "VIEW ONLINE"). A plain
+ * text label gets the letter-by-letter blur hover (BlurLetters).
+ */
 export default function Button({ to, internal, variant = 'solid', children, className = '' }) {
   return (
     <SmartLink
@@ -15,7 +19,7 @@ export default function Button({ to, internal, variant = 'solid', children, clas
       internal={internal}
       className={`inline-flex items-center gap-2 rounded-full px-5 py-3 font-mono text-mono uppercase tracking-[0.02em] transition-colors duration-300 ${styles[variant]} ${className}`}
     >
-      {children}
+      {typeof children === 'string' ? <BlurLetters text={children} /> : children}
     </SmartLink>
   )
 }

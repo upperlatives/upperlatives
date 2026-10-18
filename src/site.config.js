@@ -36,6 +36,32 @@ const site = {
   // Child pages of these paths use the centred "project" hero.
   centeredHeroUnder: ['/services/'],
 
+  // Custom cursor colour per section. Elements carry data-cursor="<name>";
+  // "light" is set on dark panels and photo/video cards.
+  cursor: {
+    default: '#111111', // ink black (the reference uses orange #ff4400)
+    light: '#ffffff',
+  },
+
+  // Label shown in the cursor over a card that links somewhere, chosen by the
+  // link target: exact page first, then pages below a path.
+  cursorLabels: {
+    exact: {
+      '/services/': 'See Services',
+      '/work/': 'See Portfolio',
+      '/process/': 'See Process',
+      '/about/': 'About Us',
+      '/faq/': 'Read FAQ',
+      '/contact/': "Let's Talk",
+    },
+    under: {
+      '/services/': 'See Service',
+      '/work/': 'See Project',
+    },
+    external: 'Visit Site',
+    fallback: 'View More',
+  },
+
   // Words that run along the 3D ribbon in dark panels.
   ribbon: ['WordPress', 'WooCommerce', 'PHP', 'SEO', 'GEO', 'AI Marketing', 'Web Design', 'Print'],
 

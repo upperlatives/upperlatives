@@ -1,18 +1,29 @@
 import RichText from '../ui/RichText'
 import Reveal from '../ui/Reveal'
+import DistortText from '../ui/DistortText'
 import { ArrowLink } from '../ui/Button'
 import { arrowLinks, heading, restHtml, text } from '../../lib/wp'
 
-/** Light section: mono label left (4/12), content right (8/12), top hairline. */
+/**
+ * Light section: the title (plus optional `aside` — intro, links) sits in the
+ * first of three columns and stays pinned while the content scrolls past in
+ * the other two. Stacks below lg.
+ */
 export function SectionShell({ label, aside, children }) {
   return (
     <section className="container-x pt-20 md:pt-28">
-      <div className="grid gap-6 md:grid-cols-12 md:gap-10">
-        <Reveal className="flex flex-col gap-6 md:col-span-4">
-          {label && <h2 className="label">{label}</h2>}
-          {aside}
-        </Reveal>
-        <div className="md:col-span-8">{children}</div>
+      <div className="grid gap-8 lg:grid-cols-3 lg:gap-2.5">
+        <div className="lg:sticky lg:top-10 lg:self-start lg:pr-10">
+          <Reveal>
+            {label && (
+              <DistortText className="display text-[clamp(2.25rem,4vw,3.75rem)] font-medium leading-[0.95] tracking-[-0.045em]">
+                {label}
+              </DistortText>
+            )}
+            {aside && <div className="mt-6 flex flex-col items-start gap-4">{aside}</div>}
+          </Reveal>
+        </div>
+        <div className="lg:col-span-2">{children}</div>
       </div>
     </section>
   )

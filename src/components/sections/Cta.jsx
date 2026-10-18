@@ -12,7 +12,9 @@ export default function Cta({ el }) {
     <section className="container-x">
       <Panel className="flex min-h-[560px] flex-col justify-between gap-10 md:min-h-[640px]">
         <div className="grid gap-6 md:grid-cols-2">
-          <p className="label">Next step</p>
+          <div>
+            <p className="label md:sticky md:top-10">Next step</p>
+          </div>
           <div>
             <h2 className="display text-[clamp(2.25rem,4.5vw,4rem)] font-medium leading-[0.95] tracking-[-0.045em] text-paper">
               {text(h2)}

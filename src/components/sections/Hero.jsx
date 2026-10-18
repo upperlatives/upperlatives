@@ -12,7 +12,7 @@ function FeaturedMedia({ image, video }) {
   if (!image && !video) return null
   return (
     <TiltCard className="container-x mt-12 md:mt-16">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-card md:aspect-[16/9]">
+      <div data-cursor="light" className="relative aspect-[4/3] overflow-hidden rounded-card md:aspect-[16/9]">
         <Media video={video} image={image} sizes="100vw" />
       </div>
     </TiltCard>

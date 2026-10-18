@@ -48,6 +48,8 @@ Writing tips:
 
 ## Before going live
 
+See also the SEO/GEO/UX checklist in [docs/seo-geo-ux-audit.md](docs/seo-geo-ux-audit.md).
+
 - Rename the `services-2`, `work-2`, `contact-2` and `home-2` slugs in WordPress, delete the old
   *Studio* / *Contact* pages, then remove the matching `slugAliases` in `src/site.config.js`.
 - Fill in the footer contact and social links in `src/site.config.js`. A German site also needs an

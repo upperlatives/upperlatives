@@ -2,10 +2,11 @@ import RichText from '../ui/RichText'
 import SmartLink from '../ui/SmartLink'
 import TiltCard from '../ui/TiltCard'
 import Media from '../ui/Media'
-import Reveal from '../ui/Reveal'
 import { ArrowLink } from '../ui/Button'
-import { arrowLinks, cards, heading, normalizePath, text } from '../../lib/wp'
+import { arrowLinks, cards, heading, normalizePath, restHtml, text } from '../../lib/wp'
 import { usePageIndex } from '../../hooks/useWp'
+import { SectionShell } from './Prose'
+import { cursorLabel } from '../../lib/cursorLabel'
 
 function Arrow() {
   return (
@@ -28,6 +29,8 @@ function Card({ card, index, wide }) {
 
   const body = (
     <div
+      data-cursor="light"
+      data-cursor-label={card.link ? cursorLabel(card.link.href, card.link.internal) : undefined}
       className={`group relative isolate flex h-full flex-col justify-between overflow-hidden rounded-card p-6 text-paper md:p-8 ${wide ? 'aspect-[4/3] md:aspect-[21/9]' : 'aspect-[4/5] sm:aspect-square'}`}
     >
       <Media video={video} image={image} index={index} className="-z-10 transition-transform duration-1000 ease-out-expo group-hover:scale-105" />
@@ -54,30 +57,41 @@ function Card({ card, index, wide }) {
   )
 }
 
-/** Two-column image cards with the scroll tilt (reference portfolio grid). */
+function CardList({ items }) {
+  const odd = items.length % 2 === 1
+  return (
+    <div className="grid gap-2.5 sm:grid-cols-2">
+      {items.map((card, i) => (
+        <Card key={card.title + i} card={card} index={i} wide={odd && i === items.length - 1} />
+      ))}
+    </div>
+  )
+}
+
+/** Image cards with the scroll tilt (reference portfolio grid), title pinned on the left. */
 export default function CardGrid({ el }) {
   const h2 = heading(el)
   const items = cards(el)
   const links = arrowLinks(el)
-  const odd = items.length % 2 === 1
+  const intro = restHtml(el, [h2, el.querySelector(':scope > .upl-cards')])
 
   return (
-    <section className="container-x pt-20 md:pt-28">
-      {h2 && (
-        <Reveal className="mb-6 flex items-end justify-between gap-6 md:mb-8">
-          <h2 className="label">{text(h2)}</h2>
-          {links.map((l) => (
-            <ArrowLink key={l.href} to={l.href} internal={l.internal}>
-              {l.label}
-            </ArrowLink>
-          ))}
-        </Reveal>
-      )}
-      <div className="grid gap-2.5 sm:grid-cols-2">
-        {items.map((card, i) => (
-          <Card key={card.title + i} card={card} index={i} wide={odd && i === items.length - 1} />
-        ))}
-      </div>
-    </section>
+    <SectionShell
+      label={text(h2)}
+      aside={
+        (intro || links.length > 0) && (
+          <>
+            <RichText html={intro} className="max-w-[34ch] text-lg leading-snug tracking-[-0.01em] text-muted" />
+            {links.map((l) => (
+              <ArrowLink key={l.href} to={l.href} internal={l.internal}>
+                {l.label}
+              </ArrowLink>
+            ))}
+          </>
+        )
+      }
+    >
+      <CardList items={items} />
+    </SectionShell>
   )
 }

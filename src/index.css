@@ -37,6 +37,15 @@
   @keyframes stack {
     to { transform: rotateY(360deg); }
   }
+  /* custom cursor: label letters blur in, chevrons drift right */
+  @keyframes cursor-letter {
+    from { opacity: 0; filter: blur(10px); }
+    to { opacity: 1; filter: blur(0); }
+  }
+  @keyframes cursor-chevrons {
+    from { transform: translateX(-30px); }
+    to { transform: translateX(0); }
+  }
 }
 
 @layer base {
@@ -54,6 +63,12 @@
 
   ::selection {
     @apply bg-ink text-paper;
+  }
+
+  /* the label cursor replaces the system pointer inside its blocks */
+  .has-custom-cursor [data-cursor-label],
+  .has-custom-cursor [data-cursor-label] * {
+    cursor: none;
   }
 
   :focus-visible {

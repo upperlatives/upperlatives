@@ -4,6 +4,7 @@ import { ReactLenis, useLenis } from 'lenis/react'
 import { useReducedMotion } from 'motion/react'
 import Header from './Header'
 import Footer from './Footer'
+import CustomCursor from '../ui/CustomCursor'
 
 // Inertia scrolling like the Framer reference. Lenis drives the native scroll
 // position, so scroll-linked animations (useScroll, whileInView) keep working.
@@ -37,6 +38,7 @@ export default function Layout() {
         <Outlet />
       </main>
       <Footer />
+      <CustomCursor />
     </>
   )
 }
