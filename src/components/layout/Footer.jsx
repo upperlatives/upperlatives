@@ -2,7 +2,7 @@ import { useLenis } from 'lenis/react'
 import SmartLink from '../ui/SmartLink'
 import Wordmark from '../ui/Wordmark'
 import { useSiteInfo } from '../../hooks/useWp'
-import { consentEnabled, openConsent } from '../../lib/consent'
+import { consentEnabled, openConsent } from '../../lib/visitorChoice'
 import site from '../../site.config'
 
 function Column({ title, items, className = '' }) {

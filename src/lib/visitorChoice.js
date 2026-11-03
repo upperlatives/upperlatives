@@ -1,5 +1,8 @@
 /*
- * Cookie consent and Google Tag Manager. GTM is loaded only after a visitor
+ * Cookie consent and Google Tag Manager. This file and its components avoid words
+ * like "cookie" or "consent" in their names: ad blockers block such URLs, and in
+ * development, where each source file loads separately, that blanks the whole app.
+ * GTM is loaded only after a visitor
  * accepts: before that, or after denying, nothing is sent to Google. The choice
  * itself stays in this browser's localStorage.
  */

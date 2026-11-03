@@ -5,7 +5,7 @@ import { useReducedMotion } from 'motion/react'
 import Header from './Header'
 import Footer from './Footer'
 import CustomCursor from '../ui/CustomCursor'
-import CookieConsent from '../ui/CookieConsent'
+import VisitorChoice from '../ui/VisitorChoice'
 import { useSiteInfo } from '../../hooks/useWp'
 
 // Inertia scrolling like the Framer reference. Lenis drives the native scroll
@@ -49,7 +49,7 @@ export default function Layout() {
       <a href="#main" className="label sr-only z-50 bg-paper p-3 focus:not-sr-only focus:fixed focus:left-3 focus:top-3">
         Skip to content
       </a>
-      <CookieConsent />
+      <VisitorChoice />
       <Header />
       <main id="main">
         <Outlet />

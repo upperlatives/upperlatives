@@ -1,9 +1,9 @@
 import { useSyncExternalStore } from 'react'
 import { ActionButton } from './Button'
-import { isConsentOpen, setConsent, subscribeConsent } from '../../lib/consent'
+import { isConsentOpen, setConsent, subscribeConsent } from '../../lib/visitorChoice'
 
 /** Small cookie popup: tracking starts only after Accept. */
-export default function CookieConsent() {
+export default function VisitorChoice() {
   const open = useSyncExternalStore(subscribeConsent, isConsentOpen)
   if (!open) return null
 

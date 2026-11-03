@@ -1,11 +1,11 @@
 import Button from '../components/ui/Button'
-import PageView from '../components/ui/PageView'
+import RouteReport from '../components/ui/RouteReport'
 
 export default function NotFound() {
   return (
     <section className="container-x">
       <title>Page not found</title>
-      <PageView title="Page not found" />
+      <RouteReport title="Page not found" />
       <meta name="robots" content="noindex" />
       <h1 className="display text-[clamp(6rem,24vw,22rem)]">404</h1>
       <p className="mt-6 max-w-[40ch] text-xl text-muted">This page doesn’t exist — or it moved when the site was updated.</p>

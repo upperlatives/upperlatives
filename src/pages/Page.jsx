@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useLocation } from 'react-router-dom'
 import Sections from '../components/sections/Sections'
 import NotFound from './NotFound'
-import PageView from '../components/ui/PageView'
+import RouteReport from '../components/ui/RouteReport'
 import { normalizePath, parseSections } from '../lib/wp'
 import { pageQuery, usePageIndex, useSiteInfo } from '../hooks/useWp'
 import site from '../site.config'
@@ -59,7 +59,7 @@ export default function Page() {
     <>
       {/* React 19 hoists these into <head>. */}
       <title>{title}</title>
-      <PageView title={title} />
+      <RouteReport title={title} />
       {data.excerpt && <meta name="description" content={data.excerpt} />}
       <meta property="og:title" content={title} />
       {data.excerpt && <meta property="og:description" content={data.excerpt} />}

@@ -67,9 +67,9 @@ One-time setup:
 ## Google Tag Manager
 
 Set `VITE_GTM_ID=GTM-XXXXXXX` in `.env.production` and deploy. Visitors then get a cookie popup, and
-GTM loads only after they click Accept (`src/lib/consent.js`). Deny means nothing is sent to Google.
+GTM loads only after they click Accept (`src/lib/visitorChoice.js`). Deny means nothing is sent to Google.
 "Cookie settings" in the footer reopens the popup; withdrawing consent removes Google's cookies and
-reloads the page. The popup text is in `src/components/ui/CookieConsent.jsx`. In development the popup
+reloads the page. The popup text is in `src/components/ui/VisitorChoice.jsx`. In development the popup
 also shows without an ID, so it can be reviewed.
 
 GTM's `<noscript>` snippet is left out on purpose: it would track visitors without asking them.
