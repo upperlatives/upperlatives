@@ -37,6 +37,9 @@ function noindex(enabled) {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const wpUrl = env.VITE_WP_URL || 'https://wp.upperlatives.com'
+  if (env.VITE_GTM_ID && !/^GTM-[A-Z0-9]+$/.test(env.VITE_GTM_ID)) {
+    throw new Error(`VITE_GTM_ID must look like GTM-XXXXXXX, got "${env.VITE_GTM_ID}"`)
+  }
 
   return {
     plugins: [react(), tailwindcss(), noindex(env.VITE_NOINDEX === 'true')],

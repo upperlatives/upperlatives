@@ -2,6 +2,7 @@ import { useLenis } from 'lenis/react'
 import SmartLink from '../ui/SmartLink'
 import Wordmark from '../ui/Wordmark'
 import { useSiteInfo } from '../../hooks/useWp'
+import { consentEnabled, openConsent } from '../../lib/consent'
 import site from '../../site.config'
 
 function Column({ title, items, className = '' }) {
@@ -44,6 +45,11 @@ export default function Footer() {
               {l.label} ↗
             </SmartLink>
           ))}
+          {consentEnabled && (
+            <button type="button" onClick={openConsent} className="label cursor-pointer transition-colors hover:text-ink">
+              Cookie settings
+            </button>
+          )}
         </div>
         <button
           type="button"

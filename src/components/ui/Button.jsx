@@ -8,6 +8,9 @@ const styles = {
   light: 'bg-paper text-ink hover:bg-line',
 }
 
+const pill =
+  'inline-flex items-center gap-2 rounded-full px-5 py-3 font-mono text-mono uppercase tracking-[0.02em] transition-colors duration-300'
+
 /**
  * Pill button in the reference style ("DOWNLOAD MY CV", "VIEW ONLINE"). A plain
  * text label gets the letter-by-letter blur hover (BlurLetters).
@@ -17,10 +20,19 @@ export default function Button({ to, internal, variant = 'solid', children, clas
     <SmartLink
       to={to}
       internal={internal}
-      className={`inline-flex items-center gap-2 rounded-full px-5 py-3 font-mono text-mono uppercase tracking-[0.02em] transition-colors duration-300 ${styles[variant]} ${className}`}
+      className={`${pill} ${styles[variant]} ${className}`}
     >
       {typeof children === 'string' ? <BlurLetters text={children} /> : children}
     </SmartLink>
+  )
+}
+
+/** Same pill for actions on the page rather than links. */
+export function ActionButton({ onClick, variant = 'light', children }) {
+  return (
+    <button type="button" onClick={onClick} className={`${pill} cursor-pointer ${styles[variant]}`}>
+      <BlurLetters text={children} />
+    </button>
   )
 }
 

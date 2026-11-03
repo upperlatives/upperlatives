@@ -16,7 +16,7 @@ npm run lint
 | --- | --- |
 | `.env` | Defaults: `VITE_WP_URL=https://wp.upperlatives.com`. In dev, `/wp-json` and `/wp-content` are proxied there. |
 | `.env.local` | Your machine's overrides (not committed), e.g. switch to the local copy `https://upper.test`. |
-| `.env.production` | Used by `npm run build`: same URL plus `VITE_WP_DIRECT=true`, so the built site calls WordPress directly. `VITE_NOINDEX=true` keeps the site out of search engines (robots meta tag + `X-Robots-Tag` header); remove it to go public. |
+| `.env.production` | Used by `npm run build`: same URL plus `VITE_WP_DIRECT=true`, so the built site calls WordPress directly. `VITE_NOINDEX=true` keeps the site out of search engines (robots meta tag + `X-Robots-Tag` header); remove it to go public. `VITE_GTM_ID` enables the cookie popup and Google Tag Manager; empty means neither. |
 | `src/site.config.js` | Navigation, footer links, contact details, slug aliases, hero variants, ribbon words. |
 | `src/index.css` | Design tokens (colours, fonts, radius) in `@theme`. |
 
@@ -63,6 +63,21 @@ One-time setup:
 
 `public/.htaccess` ships with every deploy: it serves `index.html` for all app routes (so links like
 `/services/seo/` work on reload) and sets cache headers.
+
+## Google Tag Manager
+
+Set `VITE_GTM_ID=GTM-XXXXXXX` in `.env.production` and deploy. Visitors then get a cookie popup, and
+GTM loads only after they click Accept (`src/lib/consent.js`). Deny means nothing is sent to Google.
+"Cookie settings" in the footer reopens the popup; withdrawing consent removes Google's cookies and
+reloads the page. The popup text is in `src/components/ui/CookieConsent.jsx`. In development the popup
+also shows without an ID, so it can be reviewed.
+
+GTM's `<noscript>` snippet is left out on purpose: it would track visitors without asking them.
+
+The site is a single-page app, so GTM's "All Pages" trigger fires only on the first load. For page
+views, use a **Custom Event** trigger named `spa_page_view`. It fires on every page, including the
+first, with the dataLayer variables `page_path`, `page_location` and `page_title`. Don't also fire the
+same tag on "All Pages" or "History Change", or views count twice.
 
 ## Before going live
 
